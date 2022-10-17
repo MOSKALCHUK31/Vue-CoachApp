@@ -34,7 +34,10 @@ export default {
         CoachItem
     },
     computed: {
-        ...mapGetters('coaches', ['coaches', 'hasCoaches']),
+        ...mapGetters({
+            coaches: 'coaches/coaches',
+            hasCoaches: 'coaches/hasCoaches'
+        }),
         filteredCoaches() {
             return this.coaches
         }

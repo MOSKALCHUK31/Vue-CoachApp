@@ -12,7 +12,13 @@ const router = createRouter({
     routes: [
         { path: '/', redirect: '/coaches' },
         { path: '/coaches', component: CoachList },
-        { path: '/coaches/:id', component: CoachDetails, children: [
+        // Используя динамический сегмент, мы можем получить переменную как пропсы
+        // В данном случае, переходя из компонента coaches в CoachDetails, мы не передаем в coaches айдишку
+        // как пропсы. Она можна быть передана с помощью роутинга. 
+
+        // Изначально, когда не стоит параметр props: true, то айдишка не передается. 
+        // Но когда мы ставить props: true, то параметр id передается в компонент с динамическим сегментом
+        { path: '/coaches/:id', component: CoachDetails, props: true, children: [
                 { path: 'contact', component: ContactCoach },
             ] 
         },

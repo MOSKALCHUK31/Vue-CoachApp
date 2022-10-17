@@ -1,7 +1,3 @@
-import mutations from './mutations'
-import actions from './actions'
-import getters from './getters'
-
 export default {
     namespaced: true,
     state() {
@@ -28,7 +24,12 @@ export default {
             ]
         }
     },
-    mutations: mutations,
-    actions: actions,
-    getters: getters
+    getters: {
+      coaches(state) {
+          return state.coaches
+      },
+      hasCoaches(state) {
+          return state.coaches && state.coaches.length > 0
+      }
+  }
 }
