@@ -1,0 +1,3 @@
+<template>
+    COACHLIST
+</template>
