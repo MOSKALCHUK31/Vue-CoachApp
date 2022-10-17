@@ -1,24 +1,26 @@
 <template>
     <section>
-        FILTER
+        <base-card>FILTER...</base-card>
     </section>
     <section>
-        <div class="controls">
-            <button>Refresh</button>
-            <router-link to="/register">Register as Coach</router-link>
-        </div>
-        <ul v-if="hasCoaches">
-            <coach-item 
-                v-for="coach in filteredCoaches" 
-                :key="coach.id" 
-                :id="coach.id"
-                :firstName="coach.firsName"
-                :lastName="coach.lastName"
-                :rate="coach.hourlyRate"
-                :areas="coach.areas"
-            ></coach-item>
-        </ul>
-        <h3 v-else>There is no coahes found</h3>
+        <base-card>
+            <div class="controls">
+                <base-button mode="outline">Refresh</base-button>
+                <base-button link to="/register" mode="flat">Register as Coach</base-button>
+            </div>
+            <ul v-if="hasCoaches">
+                <coach-item 
+                    v-for="coach in filteredCoaches" 
+                    :key="coach.id" 
+                    :id="coach.id"
+                    :firstName="coach.firstName"
+                    :lastName="coach.lastName"
+                    :rate="coach.hourlyRate"
+                    :areas="coach.areas"
+                ></coach-item>
+            </ul>
+            <h3 v-else>There is no coahes found</h3>
+        </base-card>
     </section>
 </template>
 
