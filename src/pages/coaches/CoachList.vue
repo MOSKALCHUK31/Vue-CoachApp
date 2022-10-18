@@ -43,7 +43,7 @@ export default {
         filteredCoaches() {
             const coaches =  this.coaches
 
-            const newCoaches = coaches.filter(el => {
+            return coaches.filter(el => {
                 if (this.activeFilters.frontend && el.areas.includes('frontend')) {
                     return el
                 }
@@ -54,8 +54,6 @@ export default {
                     return el
                 }
             })
-
-            return newCoaches
         }
     },
     data() {
