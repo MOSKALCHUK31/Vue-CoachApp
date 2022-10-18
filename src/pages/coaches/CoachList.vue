@@ -1,6 +1,6 @@
 <template>
     <section>
-        <base-card>FILTER...</base-card>
+        <coach-filter @handleChange="handleSetFilter"></coach-filter>
     </section>
     <section>
         <base-card>
@@ -28,10 +28,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import CoachItem from '../../components/coaches/CoachItem.vue'
+import CoachFilter from '../../components/coaches/CoachFilter.vue'
 
 export default {
     components: {
-        CoachItem
+        CoachItem,
+        CoachFilter
     },
     computed: {
         ...mapGetters({
@@ -39,7 +41,35 @@ export default {
             hasCoaches: 'coaches/hasCoaches'
         }),
         filteredCoaches() {
-            return this.coaches
+            const coaches =  this.coaches
+
+            const newCoaches = coaches.filter(el => {
+                if (this.activeFilters.frontend && el.areas.includes('frontend')) {
+                    return el
+                }
+                if (this.activeFilters.backend && el.areas.includes('backend')) {
+                    return el
+                }
+                if (this.activeFilters.career && el.areas.includes('career')) {
+                    return el
+                }
+            })
+
+            return newCoaches
+        }
+    },
+    data() {
+        return {
+            activeFilters: {
+                frontend: true,
+                backend: true,
+                career: true
+            }
+        }
+    },
+    methods: {
+        handleSetFilter(updatedFilters) {
+            this.activeFilters = updatedFilters
         }
     }
 }
