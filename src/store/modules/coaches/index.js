@@ -33,7 +33,7 @@ export default {
         },
         isCoach(_, getters, _3, rootGetters) {
             const coaches = getters.coaches
-            const userId = rootGetters.GetUserId
+            const userId = rootGetters.getUserId
 
             return coaches.some(el => el.id === userId)
         }
@@ -46,7 +46,7 @@ export default {
     actions: {
         coachRegistration(context, payload) {
             const transformedData = {
-                id: context.rootGetters.GetUserId,
+                id: context.rootGetters.getUserId,
                 firstName: payload.first,
                 lastName: payload.last,
                 description: payload.desc,
