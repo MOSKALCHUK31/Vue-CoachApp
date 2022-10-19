@@ -37,12 +37,13 @@
 
 <script>
 export default {
+    emits: ['save-data'],
     data() {
         return {
             firstName: '',
             lastName: '',
             description: '',
-            hourlyRate: 0,
+            hourlyRate: null,
             areas: [],
         }
     },
@@ -56,7 +57,7 @@ export default {
                 areas: this.areas
             }
 
-            console.log(dataSet)
+            this.$emit('save-data', dataSet)
         }
     }
 }
