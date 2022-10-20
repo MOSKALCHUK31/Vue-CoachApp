@@ -23,11 +23,12 @@ export default {
         }
     },
     getters: {
-        getRequests(state) {
-            return state.requests
+        getRequests(state, _getters, _rootState, rootGetters) {
+            const coachId = rootGetters.getUserId
+            return state.requests.filter(el => el.coachId === coachId)
         },
-        hasRequests(state) {
-            return state.requests && state.requests.length > 0
+        hasRequests(_state, getters) {
+            return getters.getRequests && getters.getRequests.length > 0
         }
     }
 }
