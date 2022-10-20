@@ -27,7 +27,7 @@
                 <label for="frontend">Frontend</label>
             </div>
               <div>
-                <input type="checkbox" id="backend" value="backed" v-model="areas.value" @blur="clearValidity('areas')">
+                <input type="checkbox" id="backend" value="backend" v-model="areas.value" @blur="clearValidity('areas')">
                 <label for="backend">Backend</label>
             </div>
               <div>
