@@ -41,6 +41,9 @@ export default {
     mutations: {
         coachRegistration(state, payload) {
             state.coaches.push(payload)
+        },
+        setCoaches(state, payload) {
+            state.coaches = payload
         }
     },
     actions: {
@@ -68,6 +71,33 @@ export default {
                 ...transformedData,
                 id: userId
             })
+        },
+        async loadCoaches({ commit }) {
+            const response = await fetch('https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/coaches.json')
+            const responseData = await response.json()
+
+            if (!response.ok) {
+                // error
+            }
+
+            const coaches = []
+
+            for (const key in responseData) {
+                const coach = {
+                    id: key,
+                    firstName: responseData[key].firstName,
+                    lastName: responseData[key].lastName,
+                    areas: responseData[key].areas,
+                    hourlyRate: responseData[key].hourlyRate,
+                    description: responseData[key].description
+                }
+
+                coaches.push(coach)
+            }
+
+            
+
+            commit('setCoaches', coaches)
         }
     }
 }
