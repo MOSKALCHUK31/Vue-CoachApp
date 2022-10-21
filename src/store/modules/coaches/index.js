@@ -44,17 +44,30 @@ export default {
         }
     },
     actions: {
-        coachRegistration(context, payload) {
+        async coachRegistration(context, payload) {
+            const userId = context.rootGetters.getUserId
+
             const transformedData = {
-                id: context.rootGetters.getUserId,
                 firstName: payload.first,
                 lastName: payload.last,
                 description: payload.desc,
                 hourlyRate: payload.rate,
                 areas: payload.areas
             }
+
+            const response = await fetch(`https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/coaches/${userId}.json`, {
+                method: 'PUT',
+                body: JSON.stringify(transformedData)
+            })
+
+            if (!response.ok) {
+                console.log('error')
+            }
             
-            context.commit('coachRegistration', transformedData)
+            context.commit('coachRegistration', {
+                ...transformedData,
+                id: userId
+            })
         }
     }
 }
