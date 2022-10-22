@@ -77,7 +77,7 @@ export default {
             const responseData = await response.json()
 
             if (!response.ok) {
-                // error
+                throw new Error()
             }
 
             const coaches = []
@@ -94,8 +94,6 @@ export default {
 
                 coaches.push(coach)
             }
-
-            
 
             commit('setCoaches', coaches)
         }
