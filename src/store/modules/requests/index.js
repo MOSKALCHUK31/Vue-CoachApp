@@ -8,18 +8,53 @@ export default {
     mutations: {
         contactCoach(state, payload) {
             state.requests.push(payload)
+        },
+        getRequests(state, payload) {
+            state.requests = payload
         }
     },
     actions: {
-        contactCoach(_, payload) {
+        async contactCoach(context, payload) {
+            const coachId = payload.coachId
+
             const newRequest = {
-                id: new Date().toISOString(),
-                coachId: payload.coachId,
                 email: payload.email,
                 message: payload.message
             }
 
-            this.commit('requests/contactCoach', newRequest)
+            const response = await fetch(`https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/requests/${coachId}.json`, {
+                method: 'POST',
+                body: JSON.stringify(newRequest)
+            })
+
+            const responseData = await response.json()
+
+            if (!response.ok) throw new Error()
+            
+            newRequest.id = responseData.name
+            newRequest.coachId = coachId
+
+            context.commit('contactCoach', newRequest)
+        },
+        async getRequests(context) {
+            const coachId = context.rootGetters.getUserId
+            const response = await fetch(`https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/requests/${coachId}.json`)
+            const responseData = await response.json()
+
+            const requests = []
+
+            for (const key in responseData) {
+                const request = {
+                    id: key,
+                    coachId: coachId,
+                    email: responseData[key].email,
+                    message: responseData[key].message
+                }
+
+                requests.push(request)
+            }
+
+            context.commit('getRequests', requests)
         }
     },
     getters: {
