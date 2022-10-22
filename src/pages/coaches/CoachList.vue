@@ -1,11 +1,11 @@
 <template>
-    <!-- <base-dialog 
+    <base-dialog 
         :show="!!error" 
         title="An error occured!"
         @close="handleCloseModal"
         >
         <p>{{ error }}</p>
-    </base-dialog> -->
+    </base-dialog>
     <section>
         <coach-filter @handleChange="handleSetFilter"></coach-filter>
     </section>
