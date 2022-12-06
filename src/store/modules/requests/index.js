@@ -41,6 +41,8 @@ export default {
             const response = await fetch(`https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/requests/${coachId}.json`)
             const responseData = await response.json()
 
+            if (!response.ok) throw new Error('An error occurred')
+
             const requests = []
 
             for (const key in responseData) {
