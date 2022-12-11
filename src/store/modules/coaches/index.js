@@ -41,7 +41,7 @@ export default {
     actions: {
         async coachRegistration(context, payload) {
             const userId = context.rootGetters.getUserId
-
+            const token = context.rootGetters.geToken
             const transformedData = {
                 firstName: payload.first,
                 lastName: payload.last,
@@ -50,7 +50,7 @@ export default {
                 areas: payload.areas
             }
 
-            const response = await fetch(`https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/coaches/${userId}.json`, {
+            const response = await fetch(`https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/coaches/${userId}.json?auth=${token}`, {
                 method: 'PUT',
                 body: JSON.stringify(transformedData)
             })

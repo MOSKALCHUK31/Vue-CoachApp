@@ -38,10 +38,14 @@ export default {
         },
         async getRequests(context) {
             const coachId = context.rootGetters.getUserId
-            const response = await fetch(`https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/requests/${coachId}.json`)
+            const token = context.rootGetters.geToken
+            const response = await fetch(`https://coachapp-3d38d-default-rtdb.europe-west1.firebasedatabase.app/requests/${coachId}.json?auth=${token}`)
             const responseData = await response.json()
 
-            if (!response.ok) throw new Error('An error occurred')
+            if (!response.ok) {
+                const { error } = responseData
+                throw new Error(error || 'An error occurred!')
+            }
 
             const requests = []
 

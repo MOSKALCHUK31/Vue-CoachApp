@@ -1,19 +1,29 @@
 <template>
-    <base-card>
-        <form @submit.prevent="handleSubmitForm">
-            <div class="form-control">
-                <label for="email">Email</label>
-                <input id="email" type="email" v-model.trim="email">
-            </div>
-            <div class="form-control">
-                <label for="password">Password</label>
-                <input id="password" type="password" v-model.trim="password">
-            </div>
-            <p v-if="!isValid" class="error">Please enter a valid email and password (must be at least 6 character length)</p>
-            <base-button>{{ switchModeButtonCaption }}</base-button>
-            <base-button mode="flat" type="button" @click="handleSwitchMode">{{ switchModeCaption }}</base-button>
-        </form>
-    </base-card>
+    <div>
+        <base-dialog :show="isLoading" fixed title="Authenticating...">
+            <p>Authenticating...</p>
+            <base-spinner></base-spinner>
+        </base-dialog>
+        <base-dialog :show="!!error" title="An error occurred" @close="handleClose">
+            <p>{{ this.error }}</p>
+        </base-dialog>
+        <base-card>
+            <form @submit.prevent="handleSubmitForm">
+                <div class="form-control">
+                    <label for="email">Email</label>
+                    <input id="email" type="email" v-model.trim="email">
+                </div>
+                <div class="form-control">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" v-model.trim="password">
+                </div>
+                <p v-if="!isValid" class="error">Please enter a valid email and password (must be at least 6 character
+                    length)</p>
+                <base-button>{{ switchModeButtonCaption }}</base-button>
+                <base-button mode="flat" type="button" @click="handleSwitchMode">{{ switchModeCaption }}</base-button>
+            </form>
+        </base-card>
+    </div>
 </template>
 
 <script>
@@ -33,14 +43,16 @@ export default {
             email: '',
             password: '',
             isValid: true,
-            mode: 'signIn'
+            mode: 'signIn',
+            isLoading: false,
+            error: null
         }
     },
     methods: {
         handleSwitchMode() {
             this.mode === 'signIn' ? this.mode = 'signUp' : this.mode = 'signIn'
         },
-        handleSubmitForm() {
+        async handleSubmitForm() {
             this.isValid = true
 
             if (this.email === '' || this.password.length < 6) {
@@ -48,8 +60,28 @@ export default {
                 return
             }
 
-        }
+            this.isLoading = true
 
+            const payload = {
+                email: this.email,
+                password: this.password
+            }
+
+            try {
+                if (this.mode === 'signIn') await this.$store.dispatch('HANDLE_SIGNIN_ACTION', payload)
+                else await this.$store.dispatch('HANDLE_SIGNUP_ACTION', payload)
+
+                const currentUrl = '/' + (this.$route.query.redirect || 'coaches')
+                this.$router.push(currentUrl)
+            } catch (err) {
+                this.error = err
+            }
+
+            this.isLoading = false
+        },
+        handleClose() {
+            this.error = null
+        }
     }
 }
 </script>

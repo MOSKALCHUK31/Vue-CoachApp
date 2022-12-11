@@ -14,7 +14,8 @@
             <base-card>
                 <div class="controls">
                     <base-button @click="loadCoaches" mode="outline">Refresh</base-button>
-                    <base-button v-if="!isCoach && !isLoading" link to="/register" mode="flat">Register as Coach</base-button>
+                    <base-button v-if="!isCoach && !isLoading && isLoggedIn" link to="/register" mode="flat">Register as Coach</base-button>
+                    <base-button v-if="!isLoggedIn && !isLoading" link to="/auth?redirect=register">Login to register as coach</base-button>
                 </div>
                 <ul v-if="hasCoaches && !isLoading">
                     <coach-item 
@@ -51,7 +52,8 @@ export default {
         ...mapGetters({
             coaches: 'coaches/coaches',
             hasCoaches: 'coaches/hasCoaches',
-            isCoach: 'coaches/isCoach'
+            isCoach: 'coaches/isCoach',
+            isLoggedIn: 'isAuthenticated'
         }),
         filteredCoaches() {
             const coaches =  this.coaches
