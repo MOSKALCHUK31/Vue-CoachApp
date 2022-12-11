@@ -15,10 +15,22 @@ export default {
     },
     actions: {
         async HANDLE_SIGNUP_ACTION(context, payload) {
-            const api_base = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
-            const api_key = 'AIzaSyDYB5sPFEt7AqmT_aL3VpAR68-0ud0spsc'
-
-            const url = api_base + api_key
+            return await context.dispatch('HANDLE_AUTH_ACTION', {
+                ...payload,
+                mode: 'signup'
+            })
+        },
+        async HANDLE_SIGNIN_ACTION(context, payload) {
+            return await context.dispatch('HANDLE_AUTH_ACTION', {
+                ...payload,
+                mode: 'signIn'
+            })
+        },
+        async HANDLE_AUTH_ACTION(context, payload) {
+            const mode = payload.mode
+            const url = mode === 'signIn'
+                ? 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDYB5sPFEt7AqmT_aL3VpAR68-0ud0spsc'
+                : 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDYB5sPFEt7AqmT_aL3VpAR68-0ud0spsc'
             const method = 'POST'
             const body = JSON.stringify({
                 email: payload.email,
@@ -33,11 +45,14 @@ export default {
             const responseData = await response.json()
 
             if (!response.ok) {
-                console.log(responseData)
                 const { error: { message } } = await responseData
                 const error = new Error (message || 'Failed to authenticate')
                 throw error
             }
+
+            localStorage.setItem('idToken', responseData.idToken)
+            localStorage.setItem('userId', responseData.localId)
+            localStorage.setItem('expiresIn', responseData.expiresIn)
 
             context.commit('setUser', {
                 idToken: responseData.idToken,
@@ -45,42 +60,22 @@ export default {
                 userId: responseData.localId
             })
         },
-        async HANDLE_SIGNIN_ACTION(context, payload) {
-            const api_base = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
-            const api_key = 'AIzaSyDYB5sPFEt7AqmT_aL3VpAR68-0ud0spsc'
-
-            const url = api_base + api_key
-            const method = 'POST'
-            const body = JSON.stringify({
-                email: payload.email,
-                password: payload.password,
-                returnSecureToken: true
-            })
-
-            const response = await fetch(url, {
-                method,
-                body
-            })
-            const responseData = await response.json()
-
-            if (!response.ok) {
-                console.log(responseData)
-                const { error: { message } } = await responseData
-                const error = new Error (message || 'Failed to authenticate')
-                throw error
-            }
+        HANDLE_TRY_LOGIN_ACTION(context) {
+            const idToken = localStorage.getItem('idToken')
+            const userId = localStorage.getItem('userId')
+            const expiresIn = localStorage.getItem('expiresIn')
 
             context.commit('setUser', {
-                idToken: responseData.idToken,
-                expiresIn: responseData.expiresIn,
-                userId: responseData.localId
+                idToken: idToken,
+                userId: userId,
+                expiresIn: expiresIn
             })
         },
         HANDLE_LOGOUT_ACTION(context) {
             context.commit('setUser', {
                 userId: null,
                 expiresIn: null,
-                tokenId: null
+                token: null
             })
         }
     },

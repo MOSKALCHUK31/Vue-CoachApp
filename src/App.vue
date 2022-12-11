@@ -13,7 +13,10 @@ import TheHeader from './components/layout/TheHeader.vue'
 export default {
     components: {
         TheHeader,
-    }    
+    },
+    created() {
+        this.$store.dispatch('HANDLE_TRY_LOGIN_ACTION')
+    }
 }
 </script>
 
