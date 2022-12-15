@@ -55,7 +55,7 @@ export default {
                 throw error
             }
 
-            const expiresIn = responseData.expiresIn
+            const expiresIn = +responseData.expiresIn * 1000
             const tokenExpiration = new Date().getTime() + expiresIn
 
             localStorage.setItem('idToken', responseData.idToken)
